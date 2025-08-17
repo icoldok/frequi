@@ -6,6 +6,7 @@ import { VueDraggableGrid } from './plugins/vue-grid-layout';
 import router from './router';
 
 import { PrimeVue, FtTheme, ToastService } from './plugins/primevue';
+import { i18n } from './i18n';
 
 const myApp = createApp(App);
 
@@ -26,6 +27,7 @@ myApp.use(PrimeVue, {
   },
 });
 myApp.use(ToastService);
+myApp.use(i18n);
 
 myApp.use(router);
 myApp.use(VueDraggableGrid);
