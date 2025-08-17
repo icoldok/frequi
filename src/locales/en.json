@@ -1,0 +1,22 @@
+{
+  "navbar": {
+    "trade": "Trade",
+    "dashboard": "Dashboard",
+    "chart": "Chart",
+    "logs": "Logs",
+    "settings": "Settings",
+    "backtest": "Backtest",
+    "downloadData": "Download Data",
+    "pairlistConfig": "Pairlist Config",
+    "noBotSelected": "No bot selected",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "settings": {
+    "title": "UI settings",
+    "layoutsReset": "Layouts have been reset."
+  }
+}
+
+
+

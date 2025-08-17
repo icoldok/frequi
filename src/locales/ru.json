@@ -1,0 +1,22 @@
+{
+  "navbar": {
+    "trade": "Торговать",
+    "dashboard": "Панель",
+    "chart": "График",
+    "logs": "Логи",
+    "settings": "Настройки",
+    "backtest": "Бэктест",
+    "downloadData": "Загрузка данных",
+    "pairlistConfig": "Настройка списков пар",
+    "noBotSelected": "Бот не выбран",
+    "online": "Онлайн",
+    "offline": "Оффлайн"
+  },
+  "settings": {
+    "title": "Настройки интерфейса",
+    "layoutsReset": "Макеты сброшены."
+  }
+}
+
+
+

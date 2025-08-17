@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import Menu from 'primevue/menu';
 import type { MenuItem } from 'primevue/menuitem';
 import { breakpointsTailwind } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 
 const botStore = useBotStore();
 
@@ -18,6 +19,7 @@ const pingInterval = ref<number>();
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
 const isMobile = breakpoints.smallerOrEqual('md');
+const { t } = useI18n();
 
 async function clickLogout() {
   botStore.removeBot(botStore.selectedBot);
@@ -99,44 +101,44 @@ watch(
   },
 );
 
-// Navigation items array
-const navItems = ref([
+// Navigation items (reactive to locale changes)
+const navItems = computed(() => [
   {
-    label: 'Trade',
+    label: t('navbar.trade'),
     to: '/trade',
     visible: computed(() => !botStore.canRunBacktest),
     icon: 'i-mdi-currency-usd',
   },
   {
-    label: 'Dashboard',
+    label: t('navbar.dashboard'),
     to: '/dashboard',
     visible: computed(() => !botStore.canRunBacktest),
     icon: 'i-mdi-view-dashboard',
   },
   {
-    label: 'Chart',
+    label: t('navbar.chart'),
     to: '/graph',
     icon: 'i-mdi-chart-line',
   },
   {
-    label: 'Logs',
+    label: t('navbar.logs'),
     to: '/logs',
     icon: 'i-mdi-format-list-bulleted',
   },
   {
-    label: 'Settings',
+    label: t('navbar.settings'),
     to: '/settings',
     mobileOnly: true,
     icon: 'i-mdi-cog',
   },
   {
-    label: 'Backtest',
+    label: t('navbar.backtest'),
     to: '/backtest',
     visible: computed(() => botStore.canRunBacktest),
     icon: 'i-mdi-currency-usd',
   },
   {
-    label: 'Download Data',
+    label: t('navbar.downloadData'),
     to: '/download_data',
     visible: computed(
       () => botStore.isWebserverMode && botStore.activeBot.botFeatures.downloadDataView,
@@ -144,7 +146,7 @@ const navItems = ref([
     icon: 'i-mdi-download',
   },
   {
-    label: 'Pairlist Config',
+    label: t('navbar.pairlistConfig'),
     to: '/pairlist_config',
     icon: 'i-mdi-format-list-numbered-rtl',
     visible: computed(
@@ -213,6 +215,7 @@ const drawerVisible = ref(false);
             {{ item.label }}
           </RouterLink>
           <ThemeSelect />
+          <LanguageSelect />
         </div>
 
         <!-- Right aligned nav items -->
@@ -255,14 +258,14 @@ const drawerVisible = ref(false);
             <span class="text-sm me-2">
               {{
                 (botStore.activeBotorUndefined && botStore.activeBotorUndefined.botName) ||
-                'No bot selected'
+                $t('navbar.noBotSelected')
               }}
             </span>
             <span v-if="botStore.botCount === 1">
               {{
                 botStore.activeBotorUndefined && botStore.activeBotorUndefined.isBotOnline
-                  ? 'Online'
-                  : 'Offline'
+                  ? $t('navbar.online')
+                  : $t('navbar.offline')
               }}
             </span>
           </div>
@@ -341,6 +344,9 @@ const drawerVisible = ref(false);
                   {{ item.label }}
                 </RouterLink>
                 <Divider />
+                <div class="flex flex-row items-center justify-center">
+                  <LanguageSelect />
+                </div>
                 <span class="text-surface-200 text-center"
                   >Version: {{ settingsStore.uiVersion }}</span
                 >

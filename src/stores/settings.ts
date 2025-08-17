@@ -37,6 +37,7 @@ export const useSettingsStore = defineStore('uiSettings', {
       timeProfitPreference: TimeSummaryCols.abs_profit,
       multiPaneButtonsShowText: false,
       backtestAdditionalMetrics: ['profit_factor', 'expectancy'] as string[],
+      currentLocale: (navigator.language?.toLowerCase().startsWith('ru') ? 'ru' : 'en') as 'en' | 'ru',
     };
   },
   getters: {
