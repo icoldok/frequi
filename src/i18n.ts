@@ -1,5 +1,5 @@
 import { createI18n } from 'vue-i18n';
-import en from './locales/enjson';
+import en from './locales/en.json';
 import ru from './locales/ru.json';
 
 const saved = localStorage.getItem('lang');
@@ -15,5 +15,6 @@ export const i18n = createI18n({
 export function changeLanguage(lng: 'en' | 'ru') {
   // @ts-ignore
   i18n.global.locale.value = lng;
+  localStorage.setItem('lang', lng);
   localStorage.setItem('lang', lng);
 }
