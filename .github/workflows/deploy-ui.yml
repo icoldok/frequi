@@ -1,0 +1,55 @@
+name: Deploy UI to Server
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: true
+          args: [--frozen-lockfile]
+      - name: Build UI
+        run: pnpm build
+      - name: Pack dist
+        run: |
+          cd dist
+          zip -r ../ui-dist.zip .
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-dist
+          path: ui-dist.zip
+      - name: Copy dist to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: "dist/*"
+          target: "${{ secrets.DEPLOY_PATH }}"
+          strip_components: 1
+          overwrite: true
+      - name: Ensure ui_path and restart
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            CONF=/opt/freqtrade/epicbot/user_data/config.json
+            if command -v jq >/dev/null 2>&1; then tmp=$(mktemp); jq '.api_server.ui_path = "user_data/ui"' "$CONF" > "$tmp" && mv "$tmp" "$CONF"; fi
+            systemctl restart ${{ secrets.SERVICE_NAME }}
+            sleep 2
+            systemctl status ${{ secrets.SERVICE_NAME }} | sed -n '1,20p'
+            curl -sSI http://127.0.0.1:8080 | head -n 5 || true
